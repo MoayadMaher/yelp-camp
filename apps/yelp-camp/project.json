@@ -1,0 +1,24 @@
+{
+  "name": "yelp-camp",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/yelp-camp/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "yelp-camp:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "yelp-camp:build:development"
+        },
+        "production": {
+          "buildTarget": "yelp-camp:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}
