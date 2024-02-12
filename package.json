@@ -5,14 +5,16 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@prisma/client": "^5.9.1",
     "axios": "^1.6.0",
+    "dotenv": "^16.4.3",
     "express": "^4.18.1",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@nx/eslint": "18.0.4",
     "@nx/eslint-plugin": "18.0.4",
-    "@nx/express": "18.0.4",
+    "@nx/express": "^18.0.4",
     "@nx/jest": "18.0.4",
     "@nx/js": "18.0.4",
     "@nx/node": "18.0.4",
@@ -34,9 +36,10 @@
     "jest-environment-node": "^29.4.1",
     "nx": "18.0.4",
     "prettier": "^2.6.2",
+    "prisma": "^5.9.1",
     "react-refresh": "^0.10.0",
     "ts-jest": "^29.1.0",
-    "ts-node": "10.9.1",
+    "ts-node": "^10.9.1",
     "typescript": "~5.3.2",
     "url-loader": "^4.1.1",
     "webpack-cli": "^5.1.4"
