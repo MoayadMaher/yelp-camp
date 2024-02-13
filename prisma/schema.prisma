@@ -13,7 +13,8 @@ datasource db {
 model Campground {
   id          String  @id @default(uuid())
   title       String
-  price       String?
-  description String?
-  location    String?
+  image       String  @db.VarChar(1000)
+  price       Decimal
+  description String  @db.VarChar(255)
+  location    String
 }

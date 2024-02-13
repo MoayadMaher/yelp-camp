@@ -7,10 +7,15 @@ import express from 'express';
 import * as path from 'path';
 import { PrismaClient } from '@prisma/client';
 import methodOverride from 'method-override';
+import ejsMate from 'ejs-mate';
+import morgan from 'morgan';
+import {seedDB} from './models/seeds/index'
 
 const prisma = new PrismaClient();
 
 const app = express();
+
+app.engine('ejs', ejsMate);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'assets/views'));
@@ -20,12 +25,14 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
+app.use(morgan('dev'));
+
 app.get('', (req, res) => {
   res.render('home.ejs');
 });
 
 // app.get('/seedDB', async (req, res) => {
-// import {seedDB} from './models/seeds/index'
+
 //   seedDB().catch(console.error);
 //   res.send("seeds sucssfuly")
 // });
@@ -45,7 +52,10 @@ app.post('/campgrounds', async(req, res) => {
   const newCampground =await prisma.campground.create({
     data: {
       title: campground.title,
-      location: campground.location
+      location: campground.location,
+      image: campground.image,
+      description: campground.description,
+      price: campground.price
     }
   });
   res.redirect(`/campgrounds/${newCampground.id}`);
@@ -76,7 +86,10 @@ app.put('/campgrounds/:id', async(req, res) => {
     },
     data: {
       title: req.body.campground.title,
-      location: req.body.campground.location
+      location: req.body.campground.location,
+      image: req.body.campground.image,
+      description: req.body.campground.description,
+      price: req.body.campground.price
     }
   })
   res.redirect(`/campgrounds/${campground.id}`);
@@ -90,6 +103,11 @@ app.delete('/campgrounds/:id', async(req, res) => {
   })
   res.redirect('/campgrounds');
 });
+
+// if no path matches, send 404 error message. (last thing to call)
+app.use((req, res) => {
+  res.status(404).send('404 NOT FOUND!')
+})
 
 const port = process.env.PORT || 3001;
 const server = app.listen(port, () => {
