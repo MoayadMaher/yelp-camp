@@ -41,8 +41,6 @@ app.get('', (req, res) => {
 //   res.send("seeds sucssfuly")
 // });
 
-
-
 app.get('/campgrounds', catchAsync( async (req, res) => {
   const campgrounds = await prisma.campground.findMany();
 
@@ -118,7 +116,7 @@ app.delete('/campgrounds/:id', catchAsync(async(req, res) => {
       id: (req.params.id)
     }
   })
-  
+
   res.redirect('/campgrounds');
 }));
 
