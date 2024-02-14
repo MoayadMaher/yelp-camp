@@ -11,10 +11,19 @@ datasource db {
 }
 
 model Campground {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   title       String
-  image       String  @db.VarChar(1000)
+  image       String   @db.VarChar(1000)
   price       Decimal
-  description String  @db.VarChar(255)
+  description String   @db.VarChar(255)
   location    String
+  reviews     Review[]
+}
+
+model Review {
+  id           String     @id @default(uuid())
+  body         String
+  rating       Decimal
+  campground   Campground @relation(fields: [campgroundId], references: [id])
+  campgroundId String
 }
