@@ -9,7 +9,8 @@ import { PrismaClient } from '@prisma/client';
 import methodOverride from 'method-override';
 import ejsMate from 'ejs-mate';
 import morgan from 'morgan';
-import {seedDB} from './models/seeds/index'
+import { catchAsync } from './assets/utils/catchAsync';
+// import {seedDB} from './models/seeds/index'
 
 const prisma = new PrismaClient();
 
@@ -37,17 +38,17 @@ app.get('', (req, res) => {
 //   res.send("seeds sucssfuly")
 // });
 
-app.get('/campgrounds', async (req, res) => {
+app.get('/campgrounds', catchAsync( async (req, res) => {
   const campgrounds = await prisma.campground.findMany();
 
   res.render('campgrounds/index', {campgrounds});
-});
+}));
 
-app.get('/campgrounds/new', async(req, res) => {
+app.get('/campgrounds/new', (req, res) => {
   res.render('campgrounds/new');
 });
 
-app.post('/campgrounds', async(req, res) => {
+app.post('/campgrounds', catchAsync( async(req, res) => {
   const campground = req.body.campground;
   const newCampground =await prisma.campground.create({
     data: {
@@ -59,27 +60,27 @@ app.post('/campgrounds', async(req, res) => {
     }
   });
   res.redirect(`/campgrounds/${newCampground.id}`);
-});
+}));
 
-app.get('/campgrounds/:id', async(req, res) => {
+app.get('/campgrounds/:id', catchAsync(async(req, res) => {
   const campground = await prisma.campground.findUnique({
     where:{
       id: (req.params.id)
     }
   })
   res.render('campgrounds/show', {campground});
-});
+}));
 
-app.get('/campgrounds/:id/edit', async(req, res) => {
+app.get('/campgrounds/:id/edit', catchAsync(async(req, res) => {
   const campground = await prisma.campground.findUnique({
     where:{
       id: (req.params.id)
     }
   })
   res.render('campgrounds/edit', {campground});
-});
+}));
 
-app.put('/campgrounds/:id', async(req, res) => {
+app.put('/campgrounds/:id', catchAsync(async(req, res) => {
   const campground = await prisma.campground.update({
     where:{
       id: (req.params.id)
@@ -93,19 +94,19 @@ app.put('/campgrounds/:id', async(req, res) => {
     }
   })
   res.redirect(`/campgrounds/${campground.id}`);
-});
+}));
 
-app.delete('/campgrounds/:id', async(req, res) => {
+app.delete('/campgrounds/:id', catchAsync(async(req, res) => {
   await prisma.campground.delete({
     where:{
       id: (req.params.id)
     }
   })
   res.redirect('/campgrounds');
-});
+}));
 
 // if no path matches, send 404 error message. (last thing to call)
-app.use((req, res) => {
+app.use((err, req, res, next) => {
   res.status(404).send('404 NOT FOUND!')
 })
 
