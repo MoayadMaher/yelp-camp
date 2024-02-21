@@ -15,14 +15,15 @@ export async function seedDB() {
         await prisma.campground.deleteMany({});
         for (let i = 0; i < 50; i++) {
             const random1000: number = Math.floor(Math.random() * 1000);
-            const price = Math.floor(Math.random()*20) + 10;
+            const price = Math.floor(Math.random() * 20) + 10;
             const camp = await prisma.campground.create({
                 data: {
                     location: `${cities[random1000].city}, ${cities[random1000].state}`,
                     title: `${sample(descriptors)} ${sample(places)}`,
                     image: 'https://source.unsplash.com/collection/483251',
                     description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere possimus ullam doloribus illum odit illo obcaecati dignissimos repellendus inventore beatae cum nobis, commodi assumenda, eum porro vel ex eos tempore.',
-                    price: price
+                    price: price,
+                    authorId: "da5f8793-6db4-4734-9ad6-1beac41c4a5e"
                 }
             });
         }

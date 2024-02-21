@@ -11,12 +11,18 @@ import ejsMate from 'ejs-mate';
 import morgan from 'morgan';
 import { catchAsync } from './assets/utils/catchAsync';
 import { ExpressError } from './assets/utils/ExpressError';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import { validateCampground, validateReview } from './assets/utils/validateCampground';
-import campground  from './assets/routes/campground'
-import reviews from './assets/routes/reviews';
 import session from 'express-session';
 import flash from 'connect-flash';
-// import {seedDB} from './models/seeds/index'
+import localStrategy from 'passport-local';
+
+import authRoutes from './assets/routes/auth'
+import campgroundRoutes from './assets/routes/campground'
+import reviewsRoutes from './assets/routes/reviews';
+// import { authenticateToken } from './assets/middlewares/isLogedin';
+// import { seedDB } from './models/seeds/index'
 
 const prisma = new PrismaClient();
 
@@ -29,32 +35,35 @@ app.set('views', path.join(__dirname, 'assets/views'));
 app.use(express.static(path.join(__dirname, 'assets/public')))
 app.use(express.json());
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(morgan('dev'));
 
 const sessionConfig = {
-    secret: 'thisshouldbeabettersecret!',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      httpOnly: true,
-      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    }
+  secret: 'thisshouldbeabettersecret!',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  }
 };
 app.use(session(sessionConfig));
 app.use(flash());
 
 app.use((req, res, next) => {
+  res.locals.currentUser = req.cookies.userID;
   res.locals.success = (req as any).flash('success');
   res.locals.error = (req as any).flash('error');
   next();
 });
 
-
-app.use('/campgrounds', campground);
-app.use('/campgrounds/:id/reviews', reviews);
+app.use('/auth', authRoutes);
+app.use('/campgrounds', campgroundRoutes);
+app.use('/campgrounds/:id/reviews', reviewsRoutes);
 
 
 app.get('', (req, res) => {
@@ -72,13 +81,13 @@ app.get('', (req, res) => {
 
 // if no path matches, send 404 error message. (last thing to call)
 app.all('*', (req, res, next) => {
-  next (new ExpressError('Page Not Found', 404));
+  next(new ExpressError('Page Not Found', 404));
 });
 
 app.use((err, req, res, next) => {
-    const { statusCode = 500 } = err;
-    if (!err.message) err.message = 'Oh No, Something Went Wrong!'
-    res.status(statusCode).render('error', { err })
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = 'Oh No, Something Went Wrong!'
+  res.status(statusCode).render('error', { err })
 });
 
 const port = process.env.PORT || 3001;

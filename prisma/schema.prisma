@@ -18,12 +18,25 @@ model Campground {
   description String   @db.VarChar(255)
   location    String
   reviews     Review[]
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
 }
 
 model Review {
   id           String     @id @default(uuid())
   body         String
-  rating       Decimal
+  rating       Int
   campground   Campground @relation(fields: [campgroundId], references: [id])
   campgroundId String
+  author       User       @relation(fields: [authorId], references: [id])
+  authorId     String
+}
+
+model User {
+  id          String      @id @default(uuid())
+  username    String
+  email       String      @unique
+  password    String
+  campgrounds Campground[]
+  reviews     Review[]
 }
