@@ -5,9 +5,11 @@
   "scripts": {},
   "private": true,
   "dependencies": {
-    "@prisma/client": "^5.9.1",
+    "@mapbox/mapbox-sdk": "^0.15.3",
+    "@prisma/client": "^5.10.2",
     "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.41.3",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.3",
@@ -17,6 +19,8 @@
     "joi": "^17.12.1",
     "jsonwebtoken": "^9.0.2",
     "method-override": "^3.0.0",
+    "multer": "^1.4.5-lts.1",
+    "multer-storage-cloudinary": "^4.0.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "tslib": "^2.3.0"

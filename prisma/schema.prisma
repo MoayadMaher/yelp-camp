@@ -13,13 +13,21 @@ datasource db {
 model Campground {
   id          String   @id @default(uuid())
   title       String
-  image       String   @db.VarChar(1000)
-  price       Decimal
   description String   @db.VarChar(255)
   location    String
+  price       Decimal
   reviews     Review[]
   author      User     @relation(fields: [authorId], references: [id])
   authorId    String
+  images      Image[]
+}
+
+model Image {
+  id           String     @id @default(uuid())
+  url          String     @db.VarChar(1000)
+  filename     String?
+  campground   Campground @relation(fields: [campgroundId], references: [id])
+  campgroundId String
 }
 
 model Review {
@@ -33,9 +41,9 @@ model Review {
 }
 
 model User {
-  id          String      @id @default(uuid())
+  id          String       @id @default(uuid())
   username    String
-  email       String      @unique
+  email       String       @unique
   password    String
   campgrounds Campground[]
   reviews     Review[]

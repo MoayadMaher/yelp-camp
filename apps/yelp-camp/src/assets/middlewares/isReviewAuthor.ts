@@ -2,13 +2,13 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const isReviewAuthor = async (req, res, next) => {
-    const { id } = req.params;
-    const campground = await prisma.campground.findUnique({
+    const { id, reviewId } = req.params;
+    const review = await prisma.review.findUnique({
         where: {
-            id
+            id: reviewId
         }
     })
-    if (!(campground.authorId == (req.cookies.userID))) {
+    if (!(review.authorId == (req.cookies.userID))) {
         req.flash('error', 'You do not have permission to do that!');
         return res.redirect(`/campgrounds/${id}`);
     }

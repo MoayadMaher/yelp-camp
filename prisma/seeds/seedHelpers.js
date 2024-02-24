@@ -1,4 +1,4 @@
-export const descriptors: string[] = [
+module.exports.descriptors = [
     'Forest',
     'Ancient',
     'Petrified',
@@ -17,9 +17,9 @@ export const descriptors: string[] = [
     'Sky',
     'Dusty',
     'Diamond'
-];
+]
 
-export const places: string[] = [
+module.exports.places = [
     'Flats',
     'Village',
     'Canyon',
@@ -41,4 +41,5 @@ export const places: string[] = [
     'Hunting Camp',
     'Cliffs',
     'Hollow'
-];
+]
+
